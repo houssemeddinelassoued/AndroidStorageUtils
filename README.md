@@ -9,7 +9,7 @@ Usage
 
 Just import the package to your source code and then use
     
-	storage = new StorageUtils(getApplicationContext());
+	StorageUtils storage = new StorageUtils(getApplicationContext());
 	
 in an Android Activity or Service to create the storage object and use it. That's all. :)
 

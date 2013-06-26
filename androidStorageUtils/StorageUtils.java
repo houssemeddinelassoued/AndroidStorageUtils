@@ -1,7 +1,7 @@
 /* 
 	MIT/X Consortium License 
 	
-	© uberspot <Paul Sarbinowski>
+	ï¿½ uberspot <Paul Sarbinowski>
 
 	Permission is hereby granted, free of charge, to any person obtaining a
 	copy of this software and associated documentation files (the "Software"),
@@ -43,12 +43,26 @@ import android.os.Environment;
  */
 public class StorageUtils extends ContextWrapper {
 
+    /** Singleton instance */
+	private static StorageUtils instance = null;
+	
+    /** Default name for preferences file*/
+	public static final String STORAGE_NAME = "Preferences";
+	
 	/** Initial constructor
 	 * @param base the context of the activity calling the utilities.
 	 */
 	public StorageUtils(Context base) {
 		super(base);
 	}
+	
+	/** Static instance method */
+	public static StorageUtils getInstance(Context context) {
+	      if(instance == null) {
+	         instance = new StorageUtils(context);
+	      }
+	      return instance;
+	 }
 	
 	/** Checks if a file with the given name already exists in the internal storage.
 	 * @param fileName the name of the file to check
@@ -150,12 +164,29 @@ public class StorageUtils extends ContextWrapper {
 	}
 	
 	/** Saves a preference in the storage
+	 * @param valueName the name of the preference
+	 * @param value the value of the preference
+	 * @return true if it was saved successfully, false otherwise
+	 */
+	public boolean savePreference(String valueName, String value) {
+	      return savePreference(STORAGE_NAME, valueName, value);
+	}
+	
+	/** Loads a preference from the storage
+	 * @param valueName the name of the preference
+	 * @return a string containing the preference
+	 */
+	public String getPreference(String valueName) {
+	      return getPreference(STORAGE_NAME, valueName) ;
+	}
+	
+	/** Saves a preference in the storage
 	 * @param preferencesName the name of the file holding the preferences
 	 * @param valueName the name of the preference
 	 * @param value the value of the preference
 	 * @return true if it was saved successfully, false otherwise
 	 */
-	public boolean savePreference(String preferencesName, String valueName, String value){
+	public boolean savePreference(String preferencesName, String valueName, String value) {
 	      SharedPreferences.Editor editor = getSharedPreferences(preferencesName, Context.MODE_PRIVATE).edit();
 	      editor.putString(valueName, value);
 	      return editor.commit();
@@ -166,7 +197,7 @@ public class StorageUtils extends ContextWrapper {
 	 * @param valueName the name of the preference
 	 * @return a string containing the preference
 	 */
-	public String getPreference(String preferencesName, String valueName){
+	public String getPreference(String preferencesName, String valueName) {
 	      return getSharedPreferences(preferencesName, Context.MODE_PRIVATE).getString(valueName, "");
 	}
 
@@ -177,7 +208,7 @@ public class StorageUtils extends ContextWrapper {
 	 * @param overwrite if set to true the file will be overwritten if it already exists
 	 * @return true if the file was written successfully, false otherwise
 	 */
-	public boolean saveObjectToExternalStorage(Object obj, String directory, String fileName, boolean overwrite) {
+	public static boolean saveObjectToExternalStorage(Object obj, String directory, String fileName, boolean overwrite) {
 		if(!directory.startsWith(File.separator))
 			directory = File.separator + directory;
 
@@ -206,7 +237,7 @@ public class StorageUtils extends ContextWrapper {
 	 * @param fileName the fileName in which the object was saved
 	 * @return the Object read from the file
 	 */
-	public Object loadObjectFromExternalStorage(String fileName) {
+	public static Object loadObjectFromExternalStorage(String fileName) {
 		if(!fileName.startsWith(File.separator))
 			fileName = File.separator + fileName;
 		
@@ -229,7 +260,7 @@ public class StorageUtils extends ContextWrapper {
 	 * @param fileName the name of the file
 	 * @return a FileInputStream to the file
 	 */
-	public FileInputStream getExternalFileInputStream(String fileName){
+	public static FileInputStream getExternalFileInputStream(String fileName){
 		if(!fileName.startsWith(File.separator))
 			fileName = File.separator + fileName;
 		
@@ -246,7 +277,7 @@ public class StorageUtils extends ContextWrapper {
 	 * @param fileName the name of the file
 	 * @return a FileOutputStream to the file
 	 */
-	public FileOutputStream getExternalFileOutputStream(String fileName){
+	public static FileOutputStream getExternalFileOutputStream(String fileName){
 		if(!fileName.startsWith(File.separator))
 			fileName = File.separator + fileName;
 		
@@ -282,7 +313,7 @@ public class StorageUtils extends ContextWrapper {
 	 * @param overwrite if set to true the file will be overwritten if it already exists
 	 * @return true if the file was written successfully, false otherwise
 	 */
-	public boolean saveStringToExternalStorage(String obj, String directory, String fileName, boolean overwrite) {
+	public static boolean saveStringToExternalStorage(String obj, String directory, String fileName, boolean overwrite) {
 		if(!directory.startsWith(File.separator))
 			directory = File.separator + directory;
 

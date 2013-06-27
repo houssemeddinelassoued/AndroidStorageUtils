@@ -11,13 +11,13 @@ Just import the package to your source code and then use
     
 	StorageUtils storage = new StorageUtils(getApplicationContext());
 	
-in an Android Activity or Service to create the storage object and use it. That's all. :)
+in an Android Activity or Service to create the storage object and use it.
 
-Todo
-----
+or
 
-* Add more usefull methods for the existing types of storage
-* Add easy access methods for storage in databases
+    StorageUtils.getInstance(context).savePreference("somePreferenceName", preferenceVariable);
+
+to use it as a singleton
 
 License
 -------

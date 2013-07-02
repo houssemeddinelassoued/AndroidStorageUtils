@@ -38,6 +38,7 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.SharedPreferences;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 
 /** Class containing some useful functions for easy usage of the storage capabilities in an Android device.
  */
@@ -45,9 +46,6 @@ public class StorageUtils extends ContextWrapper {
 
     /** Singleton instance */
 	private static StorageUtils instance = null;
-	
-    /** Default name for preferences file*/
-	public static final String STORAGE_NAME = "Preferences";
 	
 	/** Initial constructor
 	 * @param base the context of the activity calling the utilities.
@@ -169,7 +167,9 @@ public class StorageUtils extends ContextWrapper {
 	 * @return true if it was saved successfully, false otherwise
 	 */
 	public boolean savePreference(String valueName, String value) {
-	      return savePreference(STORAGE_NAME, valueName, value);
+	      SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
+	      editor.putString(valueName, value);
+	      return editor.commit();
 	}
 	
 	/** Loads a preference from the storage
@@ -177,28 +177,7 @@ public class StorageUtils extends ContextWrapper {
 	 * @return a string containing the preference
 	 */
 	public String getPreference(String valueName) {
-	      return getPreference(STORAGE_NAME, valueName) ;
-	}
-	
-	/** Saves a preference in the storage
-	 * @param preferencesName the name of the file holding the preferences
-	 * @param valueName the name of the preference
-	 * @param value the value of the preference
-	 * @return true if it was saved successfully, false otherwise
-	 */
-	public boolean savePreference(String preferencesName, String valueName, String value) {
-	      SharedPreferences.Editor editor = getSharedPreferences(preferencesName, Context.MODE_PRIVATE).edit();
-	      editor.putString(valueName, value);
-	      return editor.commit();
-	}
-	
-	/** Loads a preference from the storage
-	 * @param preferencesName the name of the file holding the preferences
-	 * @param valueName the name of the preference
-	 * @return a string containing the preference
-	 */
-	public String getPreference(String preferencesName, String valueName) {
-	      return getSharedPreferences(preferencesName, Context.MODE_PRIVATE).getString(valueName, "");
+	      return PreferenceManager.getDefaultSharedPreferences(this).getString(valueName, "");
 	}
 
 	/** Save the given object to a file in external storage

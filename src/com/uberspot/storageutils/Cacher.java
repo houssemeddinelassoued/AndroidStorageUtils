@@ -1,4 +1,5 @@
-package androidStorageUtils;
+package com.uberspot.storageutils;
+
 
 import android.content.Context;
 

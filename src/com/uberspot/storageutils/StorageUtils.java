@@ -1,3 +1,4 @@
+package com.uberspot.storageutils;
 /* 
 	MIT/X Consortium License 
 	
@@ -22,7 +23,7 @@
 	DEALINGS IN THE SOFTWARE.
 */
 
-package androidStorageUtils;
+
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -154,7 +155,7 @@ public class StorageUtils extends ContextWrapper {
 			e.printStackTrace(System.out);
 		} finally {
 			if(output!=null)
-				try { output.close(); } catch (IOException e) { }
+				try { output.close(); } catch (IOException e) { e.printStackTrace(System.out); }
 		}
 		return false;
 	}
@@ -175,7 +176,7 @@ public class StorageUtils extends ContextWrapper {
 			e.printStackTrace(System.out);
 		} finally {
 			if(input!=null)
-				try { input.close(); } catch (IOException e) { }
+				try { input.close(); } catch (IOException e) { e.printStackTrace(System.out); }
 		}
 		return obj;
 	}
@@ -208,7 +209,7 @@ public class StorageUtils extends ContextWrapper {
 	public boolean addPreferenceToSet(String valueName, String value) {
 	      Set<String> currentSet = getPreferenceSet(valueName, new HashSet<String>());
 	      currentSet.add(value);
-	      return saveObjectToInternalStorage(stringSetToJsonString(currentSet), valueName);
+	      return savePreferenceSet(valueName, currentSet);
 	}
 	
 	/** Saves a preference set in the storage in a given StringSet
@@ -217,9 +218,7 @@ public class StorageUtils extends ContextWrapper {
 	 * @return true if it was saved successfully, false otherwise
 	 */
 	public boolean savePreferenceSet(String valueName, Set<String> set) {
-	      Set<String> currentSet = getPreferenceSet(valueName, new HashSet<String>());
-	      currentSet.addAll(set); 
-	      return saveObjectToInternalStorage(stringSetToJsonString(currentSet), valueName);
+	      return savePreference(valueName, stringSetToJsonString(set));
 	}
 	
 	/** Loads a preference StringSet from the storage
@@ -227,7 +226,7 @@ public class StorageUtils extends ContextWrapper {
 	 * @return a string containing the preference
 	 */
 	public Set<String> getPreferenceSet(String valueName, Set<String> defValue) {
-		  Object setString =  loadObjectFromInternalStorage(valueName);
+		  Object setString =  getPreference(valueName, stringSetToJsonString(defValue));
 		  if(setString!=null) {
 			  return jsonStringToStringSet(setString.toString());  
 		  }
@@ -242,7 +241,7 @@ public class StorageUtils extends ContextWrapper {
 	public boolean removePreferenceFromSet(String valueName, String value) {
 		Set<String> currentSet = getPreferenceSet(valueName, new HashSet<String>());
 		currentSet.remove(value);
-		return saveObjectToInternalStorage(stringSetToJsonString(currentSet), valueName);
+		return savePreferenceSet(valueName, currentSet);
 	}
 
 	/** Save the given object to a file in external storage
@@ -272,7 +271,7 @@ public class StorageUtils extends ContextWrapper {
 			e.printStackTrace(System.out);
 		} finally {
 			if(output!=null)
-				try { output.close(); } catch (IOException e) { }
+				try { output.close(); } catch (IOException e) { e.printStackTrace(System.out); }
 		}
 		return false;
 	}
@@ -295,7 +294,7 @@ public class StorageUtils extends ContextWrapper {
 			e.printStackTrace(System.out);
 		} finally {
 			if(input!=null)
-				try { input.close(); } catch (IOException e) { }
+				try { input.close(); } catch (IOException e) { e.printStackTrace(System.out); }
 		}
 		return obj;
 	}
